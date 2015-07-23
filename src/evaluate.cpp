@@ -145,6 +145,13 @@ namespace {
   const Score ThreatenedByPawn[PIECE_TYPE_NB] = {
     S(0, 0), S(0, 0), S(107, 138), S(84, 122), S(114, 203), S(121, 217)
   };
+  
+  // PassedPawnsBonus[Rank] contains bonuses for passed pawns
+  //according to the rank of the pawn.
+  const Score PassedPawnsBonus[8] = {
+    S(0, 7), S(0, 14), S(0, 35), S(28, 70), S(74, 119), S(170, 182),
+    S(316, 259), S(512, 350)
+  };
 
   const Score ThreatenedByHangingPawn = S(40, 60);
 
@@ -568,7 +575,8 @@ namespace {
         int rr = r * (r - 1);
 
         // Base bonus based on rank
-        Value mbonus = Value(17 * rr), ebonus = Value(7 * (rr + r + 1));
+        Value mbonus = mg_value(PassedPawnsBonus[relative_rank(Us, s)]),
+              ebonus = eg_value(PassedPawnsBonus[relative_rank(Us, s)]);
 
         if (rr)
         {
