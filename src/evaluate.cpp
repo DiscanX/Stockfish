@@ -733,8 +733,8 @@ namespace {
             score -= int(relative_rank(BLACK, frontmost_sq(BLACK, b))) * Unstoppable;
     }
 
-    // Evaluate space for both sides, only during opening
-    if (pos.non_pawn_material(WHITE) + pos.non_pawn_material(BLACK) >= 11756)
+    // Evaluate space for both sides, only before the midgame
+    if (pos.game_phase() < PHASE_MIDGAME)
         score += (evaluate_space<WHITE>(pos, ei) - evaluate_space<BLACK>(pos, ei)) * Weights[Space];
 
     // Scale winning side if position is more drawish than it appears
