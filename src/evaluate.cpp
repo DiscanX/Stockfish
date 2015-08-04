@@ -146,6 +146,17 @@ namespace {
     S(0, 0), S(0, 0), S(107, 138), S(84, 122), S(114, 203), S(121, 217)
   };
 
+  // PassedPawnsBonusMg[Rank] and PassedPawnsBonusEg[Rank]
+  //contains bonuses for midgame and endgame for passed pawns according to
+  //the rank of the pawn.
+  Value PassedPawnsBonusMg[6] = {
+    V(0), V(1), V(34), V(102), V(204), V(340)
+  };
+
+  Value PassedPawnsBonusEg[6] = {
+    V(7), V(14), V(35), V(70), V(119), V(182)
+  };
+
   const Score ThreatenedByHangingPawn = S(40, 60);
 
   // Assorted bonuses and penalties used by evaluation
@@ -196,6 +207,7 @@ namespace {
   const int BishopCheck       = 6;
   const int KnightCheck       = 14;
 
+  TUNE(PassedPawnsBonusMg, PassedPawnsBonusEg);
 
   // init_eval_info() initializes king bitboards for given color adding
   // pawn attacks. To be done at the beginning of the evaluation.
@@ -568,7 +580,8 @@ namespace {
         int rr = r * (r - 1);
 
         // Base bonus based on rank
-        Value mbonus = Value(17 * rr), ebonus = Value(7 * (rr + r + 1));
+        Value mbonus = PassedPawnsBonusMg[relative_rank(Us, s) - RANK_2],
+              ebonus = PassedPawnsBonusEg[relative_rank(Us, s) - RANK_2];
 
         if (rr)
         {
