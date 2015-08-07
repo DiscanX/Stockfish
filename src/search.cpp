@@ -131,6 +131,7 @@ namespace {
   size_t PVIdx;
   EasyMoveManager EasyMove;
   double BestMoveChanges;
+  int PvVariability = 50;
   Value DrawValue[COLOR_NB];
   HistoryStats History;
   CounterMovesHistoryStats CounterMovesHistory;
@@ -364,7 +365,7 @@ namespace {
     while (++depth < DEPTH_MAX && !Signals.stop && (!Limits.depth || depth <= Limits.depth))
     {
         // Age out PV variability metric
-        BestMoveChanges *= 0.5;
+        BestMoveChanges *= (double)PvVariability / (double)100;
 
         // Save the last iteration's scores before first PV line is searched and
         // all the move scores except the (new) PV are set to -VALUE_INFINITE.
@@ -502,8 +503,10 @@ namespace {
     if (skill.enabled())
         std::swap(RootMoves[0], *std::find(RootMoves.begin(),
                   RootMoves.end(), skill.best_move(multiPV)));
+
   }
 
+  TUNE(SetRange(25, 75), PvVariability);
 
   // search<>() is the main search function for both PV and non-PV nodes and for
   // normal and SplitPoint nodes. When called just after a split point the search
