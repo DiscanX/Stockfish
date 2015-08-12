@@ -378,9 +378,9 @@ namespace {
             if (depth >= 5 * ONE_PLY)
             {
 		// Increase the value of delta when the score is closer to 0,
-		// between Value(-75) and Value(75)
-		if (std::abs(RootMoves[PVIdx].previousScore) <= Value(75))
-		   delta = Value(int((2 - 2 * pow((double)RootMoves[PVIdx].previousScore, 2) / 5625) / 10 + 1) * 16);
+		// between Value(-30) and Value(30)
+		if (std::abs(RootMoves[PVIdx].previousScore) <= Value(30))
+		   delta = Value(int((1.5 - RootMoves[PVIdx].previousScore / 60) * 16));
 		else
 		   delta = Value(16);
 
