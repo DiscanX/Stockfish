@@ -173,6 +173,17 @@ namespace {
         // pawn on each file is considered a true passed pawn.
         if (passed && !doubled)
             e->passedPawns[Us] |= s;
+        else
+        {
+            Square blockSq = s + pawn_push(Us);
+            int r = relative_rank(Us, s) - RANK_2;
+            int rr = r * (r - 1);
+
+            if(rr && (pos.pieces(Us) & blockSq))
+                //Give bonus for non passed pawns protected by
+		//one of our pieces.
+		score += make_score(rr * 3 + r * 2 + 3, rr + r * 2);
+	}
 
         // Score this pawn
         if (isolated)
