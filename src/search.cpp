@@ -379,8 +379,9 @@ namespace {
             {
 		// Increase the value of delta when the score is closer to 0,
 		// between Value(-30) and Value(30)
-		if (RootMoves[PVIdx].previousScore >= Value(-30) && RootMoves[PVIdx].previousScore <= Value(30))
-		   delta = Value(int((4 * (double)RootMoves[PVIdx].previousScore) / 15 + 16));
+		if (RootMoves[PVIdx].previousScore >= Value(-30) && 
+                    RootMoves[PVIdx].previousScore <= Value(30))
+		   delta = Value(int(24 - (2 * pow((double)RootMoves[PVIdx].previousScore, 2)) / 225));
 		else
 		   delta = Value(16);
 
