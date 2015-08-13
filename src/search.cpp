@@ -381,7 +381,7 @@ namespace {
 		// between Value(-30) and Value(30)
 		if (RootMoves[PVIdx].previousScore >= Value(-30) && 
                     RootMoves[PVIdx].previousScore <= Value(30))
-		   delta = Value(int(24 - (2 * pow((double)RootMoves[PVIdx].previousScore, 2)) / 225));
+		   delta = Value(int(32 - (4 * pow((double)RootMoves[PVIdx].previousScore, 2)) / 225));
 		else
 		   delta = Value(16);
 
