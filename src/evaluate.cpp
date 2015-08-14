@@ -165,7 +165,7 @@ namespace {
     V(0), V(0), V(13), V(27), V(47), V(73)
   };
 
-  Value PassedPawnBlockedByOurPieceEg[4] = {
+  Value PassedPawnBlockedByOurPieceEg[6] = {
     V(0), V(0), V(6), V(12), V(20), V(30)
   };
 
