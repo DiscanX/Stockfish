@@ -589,6 +589,17 @@ namespace {
             ebonus +=  distance(pos.square<KING>(Them), blockSq) * 5 * rr
                      - distance(pos.square<KING>(Us  ), blockSq) * 2 * rr;
 
+	    // Give a bonus if a rook is supporting the passed pawn on the 
+	    // block square
+	    Bitboard rookProtected = blockSq & PseudoAttacks[ROOK][blockSq];
+	    if (rookProtected)
+	    {
+	        if(pos.empty(blockSq))
+		    mbonus += 10, ebonus += 25;
+		else
+		    mbonus += 5, ebonus += 15;
+	    }
+
             // If blockSq is not the queening square then consider also a second push
             if (relative_rank(Us, blockSq) != RANK_8)
                 ebonus -= distance(pos.square<KING>(Us), blockSq + pawn_push(Us)) * rr;
