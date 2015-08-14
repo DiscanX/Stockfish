@@ -161,12 +161,12 @@ namespace {
   // PassedPawnBlockedByOurPieceEg[Rank]
   // contains bonuses for midgame and endgame when the square ahead of the
   // passed pawn is occupied by one of our pieces.
-  Value PassedPawnBlockedByOurPieceMg[4] = {
-    V(13), V(27), V(47), V(73)
+  Value PassedPawnBlockedByOurPieceMg[6] = {
+    V(0), V(0), V(13), V(27), V(47), V(73)
   };
 
   Value PassedPawnBlockedByOurPieceEg[4] = {
-    V(6), V(12), V(20), V(30)
+    V(0), V(0), V(6), V(12), V(20), V(30)
   };
 
   const Score ThreatenedByHangingPawn = S(40, 60);
