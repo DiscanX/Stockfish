@@ -290,14 +290,14 @@ namespace {
             // Penalty for pawns on same color square of bishop
             if (Pt == BISHOP)
             {
-                Bitboard pawnsAhead =  pos.pieces(Us, PAWN) & 
-			forward_bb(Us, s);
- 	 	Bitboard pawnsBehind = pos.pieces(Us, PAWN) & 
-			forward_bb(Them, s);
+                Bitboard pawnsAhead = pos.pieces(Us, PAWN) &
+			in_front_bb(Us, rank_of(s));
+		Bitboard pawnsBehind = pos.pieces(Us, PAWN) &
+			(in_front_bb(Them, rank_of(s)) | rank_bb(s));
 
-		score -= BishopPawnsAhead * (pawnsAhead && !!(DarkSquares & s));
-		score -= BishopPawnsBehind * (pawnsBehind && !!(DarkSquares & s));
-
+		Bitboard bmask = DarkSquares & s ? DarkSquares : ~DarkSquares;
+		score -= BishopPawnsAhead * popcount<Max15>(pawnsAhead & bmask);
+		score -= BishopPawnsBehind * popcount<Max15>(pawnsBehind & bmask);
             }
 
             // An important Chess960 pattern: A cornered bishop blocked by a friendly
