@@ -167,6 +167,7 @@ namespace {
   const Score Unstoppable        = S( 0, 20);
   const Score Hanging            = S(31, 26);
   const Score PawnAttackThreat   = S(20, 20);
+  const Score KingInMiddle       = S(15,  0);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -442,6 +443,10 @@ namespace {
         // array and subtract the score from evaluation.
         score -= KingDanger[std::max(std::min(attackUnits, 399), 0)];
     }
+
+    //Add a penality for staying uncastled
+    if (file_of(ksq) == FILE_E)
+	score -= KingInMiddle;
 
     if (Trace)
         Tracing::write(KING, Us, score);
