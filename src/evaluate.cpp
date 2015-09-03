@@ -303,7 +303,7 @@ namespace {
             // Bonus when behind a pawn
             if (relative_rank(Us, s) < RANK_5)
             {
-		Bitboard in_front = s + pawn_push(Us);
+		Square in_front = s + pawn_push(Us);
 		if(pos.pieces(Us, PAWN) & in_front)
                     score += MinorBehindPawnUs;
 		else if(pos.pieces(Them, PAWN) & in_front)
