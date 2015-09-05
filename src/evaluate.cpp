@@ -300,13 +300,10 @@ namespace {
                 score += Outpost[Pt == BISHOP][!!(ei.attackedBy[Us][PAWN] & s)];
 
             // Bonus when behind a pawn
-            if (relative_rank(Us, s) < RANK_5)
-            {
-		Square in_front = s + pawn_push(Us);
-		if (    relative_rank(Us, s) < RANK_5
+	    if (    relative_rank(Us, s) < RANK_5
                 && (pos.pieces(Us, PAWN) & (s + pawn_push(Us))))
                 score += MinorBehindPawnUs;
-            }
+
             // Penalty for pawns on same color square of bishop
             if (Pt == BISHOP)
                 score -= BishopPawns * ei.pi->pawns_on_same_color_squares(Us, s);
