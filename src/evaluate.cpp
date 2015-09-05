@@ -180,7 +180,6 @@ namespace {
   const Score RookOnSemiOpenFile = S(19, 10);
   const Score BishopPawns        = S( 8, 12);
   const Score MinorBehindPawnUs  = S(16,  0);
-  const Score MinorBehindPawnThem= S( 8,  0);
   const Score TrappedRook        = S(92,  0);
   const Score Unstoppable        = S( 0, 20);
   const Score Hanging            = S(31, 26);
@@ -304,10 +303,9 @@ namespace {
             if (relative_rank(Us, s) < RANK_5)
             {
 		Square in_front = s + pawn_push(Us);
-		if(pos.pieces(Us, PAWN) & in_front)
-                    score += MinorBehindPawnUs;
-		else if(pos.pieces(Them, PAWN) & in_front)
-		    score += MinorBehindPawnThem;
+		if (    relative_rank(Us, s) < RANK_5
+                && (pos.pieces(Us, PAWN) & (s + pawn_push(Us))))
+                score += MinorBehindPawnUs;
             }
             // Penalty for pawns on same color square of bishop
             if (Pt == BISHOP)
