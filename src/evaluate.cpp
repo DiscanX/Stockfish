@@ -176,14 +176,16 @@ namespace {
   const Score KingOnOne          = S( 2, 58);
   const Score KingOnMany         = S( 6,125);
   const Score RookOnPawn         = S( 7, 27);
-  const Score RookOnOpenFile     = S(43, 21);
-  const Score RookOnSemiOpenFile = S(19, 10);
+  Score RookOnOpenFile     = S(43, 21);
+  Score RookOnSemiOpenFile = S(19, 10);
   const Score BishopPawns        = S( 8, 12);
   const Score MinorBehindPawn    = S(16,  0);
   const Score TrappedRook        = S(92,  0);
   const Score Unstoppable        = S( 0, 20);
   const Score Hanging            = S(31, 26);
   const Score PawnAttackThreat   = S(20, 20);
+  Score QueenBaterySemiOpenF = S(10,  5);
+  Score QueenBateryOpenF     = S(20, 10);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -219,6 +221,7 @@ namespace {
   const int BishopCheck       = 6;
   const int KnightCheck       = 14;
 
+  TUNE(RookOnOpenFile, RookOnSemiOpenFile, QueenBaterySemiOpenF, QueenBateryOpenF);
 
   // init_eval_info() initializes king bitboards for given color adding
   // pawn attacks. To be done at the beginning of the evaluation.
@@ -283,10 +286,15 @@ namespace {
                 ei.kingAdjacentZoneAttacksCount[Us] += popcount<Max15>(bb);
         }
 
-        if (Pt == QUEEN)
-            b &= ~(  ei.attackedBy[Them][KNIGHT]
-                   | ei.attackedBy[Them][BISHOP]
-                   | ei.attackedBy[Them][ROOK]);
+         if (Pt == QUEEN)
+	{
+             b &= ~(  ei.attackedBy[Them][KNIGHT]
+                    | ei.attackedBy[Them][BISHOP]
+                    | ei.attackedBy[Them][ROOK]);
+ 
+	    if (ei.pi->semiopen_file(Us, file_of(s)) && (forward_bb(Us, s) & pos.pieces(Us, ROOK)))
+		score += ei.pi->semiopen_file(Them, file_of(s)) ? QueenBateryOpenF : QueenBaterySemiOpenF;
+	}
 
         int mob = popcount<Pt == QUEEN ? Full : Max15>(b & mobilityArea[Us]);
 
