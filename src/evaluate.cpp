@@ -184,7 +184,8 @@ namespace {
   const Score Unstoppable        = S( 0, 20);
   const Score Hanging            = S(31, 26);
   const Score PawnAttackThreat   = S(20, 20);
-
+  const Score QueenBaterySemiOpenF = S(10,  5);
+  const Score QueenBateryOpenF     = S(20, 10);
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
   // happen in Chess960 games.
@@ -284,10 +285,14 @@ namespace {
         }
 
         if (Pt == QUEEN)
+	{
             b &= ~(  ei.attackedBy[Them][KNIGHT]
                    | ei.attackedBy[Them][BISHOP]
                    | ei.attackedBy[Them][ROOK]);
 
+	    if (ei.pi->semiopen_file(Us, file_of(s)) && (forward_bb(Us, s) & pos.pieces(Us, ROOK)))
+		score += ei.pi->semiopen_file(Them, file_of(s)) ? QueenBateryOpenF : QueenBaterySemiOpenF;
+	}
         int mob = popcount<Pt == QUEEN ? Full : Max15>(b & mobilityArea[Us]);
 
         mobility[Us] += MobilityBonus[Pt][mob];
