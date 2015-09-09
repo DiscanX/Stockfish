@@ -176,16 +176,16 @@ namespace {
   const Score KingOnOne          = S( 2, 58);
   const Score KingOnMany         = S( 6,125);
   const Score RookOnPawn         = S( 7, 27);
-  const Score RookOnOpenFile     = S(43, 21);
-  const Score RookOnSemiOpenFile = S(19, 10);
+  const Score RookOnOpenFile     = S(44, 21);
+  const Score RookOnSemiOpenFile = S(20, 10);
   const Score BishopPawns        = S( 8, 12);
   const Score MinorBehindPawn    = S(16,  0);
   const Score TrappedRook        = S(92,  0);
   const Score Unstoppable        = S( 0, 20);
   const Score Hanging            = S(31, 26);
   const Score PawnAttackThreat   = S(20, 20);
-  const Score QueenBaterySemiOpenF = S(10,  5);
-  const Score QueenBateryOpenF     = S(20, 10);
+  const Score QueenBaterySemiOpenF = S(10,  4);
+  const Score QueenBateryOpenF     = S(18, 10);
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
   // happen in Chess960 games.
