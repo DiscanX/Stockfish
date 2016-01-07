@@ -160,6 +160,8 @@ namespace {
   // friendly pawn on the rook file.
   const Score RookOnFile[2] = { S(19, 10), S(43, 21) };
 
+  const Score QueenBateryOnFile[2] = { S(10, 5), S(20, 10) };   
+
   // ThreatBySafePawn[PieceType] contains bonuses according to which piece
   // type is attacked by a pawn which is protected or not attacked.
   const Score ThreatBySafePawn[PIECE_TYPE_NB] = {
@@ -293,9 +295,17 @@ namespace {
         }
 
         if (Pt == QUEEN)
+        {
             b &= ~(  ei.attackedBy[Them][KNIGHT]
                    | ei.attackedBy[Them][BISHOP]
                    | ei.attackedBy[Them][ROOK]);
+
+            if (ei.pi->semiopen_file(Us, file_of(s)) && (forward_bb(Us, s) & pos.pieces(Us, ROOK)))
+            {
+                Bitboard sameFileRook = pos.pieces(Us, ROOK) & file_bb(s);
+                score += popcount<Max15>(sameFileRook) * QueenBateryOnFile[!!ei.pi->semiopen_file(Them, file_of(s))];
+            }
+        }
 
         int mob = popcount<Pt == QUEEN ? Full : Max15>(b & mobilityArea[Us]);
 
