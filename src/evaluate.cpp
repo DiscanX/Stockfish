@@ -160,7 +160,7 @@ namespace {
   // friendly pawn on the rook file.
   const Score RookOnFile[2] = { S(19, 10), S(43, 21) };
 
-  const Score QueenBateryOnFile[2] = { S(10, 5), S(20, 10) };   
+  const Score QueenBateryOnFile[2] = { S(6, 3), S(12, 6) };   
 
   // ThreatBySafePawn[PieceType] contains bonuses according to which piece
   // type is attacked by a pawn which is protected or not attacked.
