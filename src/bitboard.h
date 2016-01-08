@@ -40,6 +40,7 @@ const std::string pretty(Bitboard b);
 }
 
 const Bitboard DarkSquares = 0xAA55AA55AA55AA55ULL;
+const Bitboard EvenSquares = 0x5555555555555555ULL;
 
 const Bitboard FileABB = 0x0101010101010101ULL;
 const Bitboard FileBBB = FileABB << 1;
@@ -133,6 +134,13 @@ inline Bitboard file_bb(Square s) {
   return FileBB[file_of(s)];
 }
 
+inline bool is_light_square(Square s) {
+  return !(DarkSquares & s);
+}
+
+inline Color square_color(Square s) {
+  return is_light_square(s) ? WHITE : BLACK;
+}
 
 /// shift_bb() moves a bitboard one step along direction Delta. Mainly for pawns
 
