@@ -176,7 +176,7 @@ namespace {
             score -= Backward[opposed];
 
         else if (!supported)
-            score -= Unsupported[more_than_one(neighbours & rank_bb(s + Up))];
+            score -= relative_rank(Us, s) == RANK_2 ? Unsupported[more_than_one(neighbours & rank_bb(s + Up))] * 3 / 4 : Unsupported[more_than_one(neighbours & rank_bb(s + Up))];
 
         if (connected)
             score += Connected[opposed][!!phalanx][more_than_one(supported)][relative_rank(Us, s)];
