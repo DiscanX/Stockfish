@@ -308,7 +308,7 @@ namespace {
                 score += MinorBehindPawn;
 
             // Penalty for pawns on the same color square as the bishop
-            if (Pt == BISHOP)
+            if (Pt == BISHOP && relative_rank(Us, s) < RANK_4)
                 score -= BishopPawns * ei.pi->pawns_on_same_color_squares(Us, s);
 
             // An important Chess960 pattern: A cornered bishop blocked by a friendly
