@@ -723,7 +723,7 @@ namespace {
                  && !pos.pawn_passed(~strongSide, pos.square<KING>(~strongSide)))
             sf = ei.pi->pawn_span(strongSide) ? ScaleFactor(51) : ScaleFactor(37);
         else if (pos.count<PAWN>(WHITE) + pos.count<PAWN>(BLACK) > 14)
-            sf = 78 * sf / SCALE_FACTOR_NORMAL;
+            sf = ScaleFactor(78 * sf / SCALE_FACTOR_NORMAL);
     }
 
     return sf;
