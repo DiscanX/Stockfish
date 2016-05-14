@@ -700,28 +700,30 @@ namespace {
 
     // If we don't already have an unusual scale factor, check for certain
     // types of endgames, and use a lower scale for those.
-    if (    ei.me->game_phase() < PHASE_MIDGAME
-        && (sf == SCALE_FACTOR_NORMAL || sf == SCALE_FACTOR_ONEPAWN))
+    if (sf == SCALE_FACTOR_NORMAL || sf == SCALE_FACTOR_ONEPAWN)
     {
-        if (pos.opposite_bishops())
+        if (ei.me->game_phase() < PHASE_MIDGAME)
         {
-            // Endgame with opposite-colored bishops and no other pieces (ignoring pawns)
-            // is almost a draw, in case of KBP vs KB, it is even more a draw.
-            if (   pos.non_pawn_material(WHITE) == BishopValueMg
-                && pos.non_pawn_material(BLACK) == BishopValueMg)
-                sf = more_than_one(pos.pieces(PAWN)) ? ScaleFactor(31) : ScaleFactor(9);
+            if (pos.opposite_bishops())
+            {
+                // Endgame with opposite-colored bishops and no other pieces (ignoring pawns)
+                // is almost a draw, in case of KBP vs KB, it is even more a draw.
+                if (   pos.non_pawn_material(WHITE) == BishopValueMg
+                    && pos.non_pawn_material(BLACK) == BishopValueMg)
+                    sf = more_than_one(pos.pieces(PAWN)) ? ScaleFactor(31) : ScaleFactor(9);
 
-            // Endgame with opposite-colored bishops, but also other pieces. Still
-            // a bit drawish, but not as drawish as with only the two bishops.
-            else
-                sf = ScaleFactor(46 * sf / SCALE_FACTOR_NORMAL);
+                // Endgame with opposite-colored bishops, but also other pieces. Still
+                // a bit drawish, but not as drawish as with only the two bishops.
+                else
+                    sf = ScaleFactor(46 * sf / SCALE_FACTOR_NORMAL);
+            }
+            // Endings where weaker side can place his king in front of the opponent's
+            // pawns are drawish.
+            else if (    abs(eg) <= BishopValueEg
+                     &&  ei.pi->pawn_span(strongSide) <= 1
+                     && !pos.pawn_passed(~strongSide, pos.square<KING>(~strongSide)))
+                sf = ei.pi->pawn_span(strongSide) ? ScaleFactor(51) : ScaleFactor(37);
         }
-        // Endings where weaker side can place his king in front of the opponent's
-        // pawns are drawish.
-        else if (    abs(eg) <= BishopValueEg
-                 &&  ei.pi->pawn_span(strongSide) <= 1
-                 && !pos.pawn_passed(~strongSide, pos.square<KING>(~strongSide)))
-            sf = ei.pi->pawn_span(strongSide) ? ScaleFactor(51) : ScaleFactor(37);
         else if (pos.count<PAWN>(WHITE) + pos.count<PAWN>(BLACK) > 14)
             sf = ScaleFactor(78 * sf / SCALE_FACTOR_NORMAL);
     }
@@ -819,7 +821,7 @@ Value Eval::evaluate(const Position& pos) {
   ScaleFactor sf = evaluate_scale_factor(pos, ei, eg_value(score));
 
   // Interpolate between a middlegame and a (scaled by 'sf') endgame score
-  Value v =  mg_value(score) * int(ei.me->game_phase())
+  Value v =  mg_value(score) * int(ei.me->game_phase()) * sf / SCALE_FACTOR_NORMAL
            + eg_value(score) * int(PHASE_MIDGAME - ei.me->game_phase()) * sf / SCALE_FACTOR_NORMAL;
 
   v /= int(PHASE_MIDGAME);
