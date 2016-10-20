@@ -84,6 +84,8 @@ namespace {
   // in front of the king and no enemy pawn on the horizon.
   const Value MaxSafetyBonus = V(258);
 
+  const int Drawish[7] = { 4, 3, 2, 1, 0, 0, 0 };
+
   #undef S
   #undef V
 
@@ -99,6 +101,8 @@ namespace {
     Square s;
     bool opposed, lever, connected, backward;
     Score score = SCORE_ZERO;
+    int drawishTotal = 0;
+    int frontPawnDist;
     const Square* pl = pos.squares<PAWN>(Us);
     const Bitboard* pawnAttacksBB = StepAttacksBB[make_piece(Us, PAWN)];
 
@@ -131,6 +135,15 @@ namespace {
         phalanx    = neighbours & rank_bb(s);
         supported  = neighbours & rank_bb(s - Up);
         connected  = supported | phalanx;
+
+        if (opposed && !lever)
+        {
+            frontPawnDist = 0;
+            while(!(forward_bb(Us, s) & (s + Up * (frontPawnDist + 1))))
+                frontPawnDist++;
+
+            drawishTotal += Drawish[frontPawnDist];
+        }
 
         // A pawn is backward when it is behind all pawns of the same color on the
         // adjacent files and cannot be safely advanced.
@@ -174,7 +187,7 @@ namespace {
             score += Lever[relative_rank(Us, s)];
     }
 
-    return score;
+    return score *= (32 - drawishTotal) / 32;
   }
 
 } // namespace
