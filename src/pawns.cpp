@@ -187,7 +187,7 @@ namespace {
             score += Lever[relative_rank(Us, s)];
     }
 
-    return score *= (128 - drawishTotal) / 128.0f;
+    return drawishTotal < 25 ? score : score / 2;
   }
 
 } // namespace
