@@ -198,6 +198,7 @@ namespace {
   const Score Hanging             = S(48, 27);
   const Score ThreatByPawnPush    = S(38, 22);
   const Score Unstoppable         = S( 0, 20);
+  const Score RookOnSeventhPawns  = S(16, 15);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -332,14 +333,19 @@ namespace {
 
         if (Pt == ROOK)
         {
-            // Bonus for aligning with enemy pawns on the same rank/file
             if (relative_rank(Us, s) >= RANK_5)
+            {
+                // Bonus for aligning with enemy pawns on the same rank/file
                 score += RookOnPawn * popcount(pos.pieces(Them, PAWN) & PseudoAttacks[ROOK][s]);
 
+                // Bonus for aligning with 2 enemy pawns or more on the 7th rank
+                if (relative_rank(Us, s) == RANK_7 && more_than_one(pos.pieces(Them, PAWN) & rank_bb(s)))
+                    score += RookOnSeventhPawns;
+            }
             // Bonus when on an open or semi-open file
             if (ei.pi->semiopen_file(Us, file_of(s)))
                 score += RookOnFile[!!ei.pi->semiopen_file(Them, file_of(s))];
-
+    
             // Penalize when trapped by the king, even more if the king cannot castle
             else if (mob <= 3)
             {
