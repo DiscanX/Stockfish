@@ -95,7 +95,7 @@ namespace {
     const Square Right = (Us == WHITE ? NORTH_EAST : SOUTH_WEST);
     const Square Left  = (Us == WHITE ? NORTH_WEST : SOUTH_EAST);
 
-    Bitboard b, neighbours, stoppers, doubled, doubledEnemy, supported, phalanx;
+    Bitboard b, neighbours, stoppers, doubled, supported, phalanx;
     Square s;
     bool opposed, lever, connected, backward, surrounded;
     Score score = SCORE_ZERO;
@@ -127,12 +127,11 @@ namespace {
         stoppers   = theirPawns & passed_pawn_mask(Us, s);
         lever      = theirPawns & pawnAttacksBB[s];
         doubled    = ourPawns   & (s + Up);
-        doubledEnemy = theirPawns & (s + Up);
         neighbours = ourPawns   & adjacent_files_bb(f);
         phalanx    = neighbours & rank_bb(s);
         supported  = neighbours & rank_bb(s - Up);
         connected  = supported | phalanx;
-        surrounded = theirPawns & (between_bb(s + (2 * WEST), s + (2 * EAST)) | doubledEnemy);
+        surrounded = (theirPawns & (s + Up)) && (theirPawns & (s + EAST)) && (theirPawns & (s + WEST));
 
         // A pawn is backward when it is behind all pawns of the same color on the
         // adjacent files and cannot be safely advanced.
