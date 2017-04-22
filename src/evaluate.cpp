@@ -225,13 +225,10 @@ namespace {
   const Value LazyThreshold = Value(1500);
 
   //Tuned values
-  int asymmetryMultiplier = 8;
-  int kingDistMultiplier = 8;
-  int kingDistMalus = 132;
-  int pawnBonus[17] = { 0, 12, 25, 37, 50, 62, 75, 87, 100, 112, 125, 137, 150, 162, 175, 187, 200 };
-  int bothFlanksBonus = 16;
+  int kingDistMalus = 131;
+  int InitiativePawnBonus[17] = { 0, 12, 24, 36, 52, 62, 76, 88, 96, 112, 124, 139, 150, 163, 171, 178, 205 };
 
-  TUNE(asymmetryMultiplier, kingDistMultiplier, kingDistMalus, pawnBonus, bothFlanksBonus);
+  TUNE(kingDistMalus, pawnBonus);
 
   // eval_init() initializes king and attack bitboards for a given color
   // adding pawn attacks. To be done at the beginning of the evaluation.
@@ -753,7 +750,7 @@ namespace {
     bool bothFlanks = (pos.pieces(PAWN) & QueenSide) && (pos.pieces(PAWN) & KingSide);
 
     // Compute the initiative bonus for the attacking side
-    int initiative = asymmetryMultiplier * asymmetry + kingDistMultiplier * kingDistance - kingDistMalus + pawnBonus[pawns] + bothFlanksBonus * bothFlanks;
+    int initiative = 8 * (asymmetry + kingDistance) + InitiativePawnBonus[pos.count<PAWN>()] + 16 * bothFlanks - kingDistMalus;
 
     // Now apply the bonus: note that we find the attacking side by extracting
     // the sign of the endgame value, and that we carefully cap the bonus so
