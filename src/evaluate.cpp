@@ -228,7 +228,7 @@ namespace {
   int kingDistMalus = 131;
   int InitiativePawnBonus[17] = { 0, 12, 24, 36, 52, 62, 76, 88, 96, 112, 124, 139, 150, 163, 171, 178, 205 };
 
-  TUNE(kingDistMalus, pawnBonus);
+  TUNE(kingDistMalus, InitiativePawnBonus);
 
   // eval_init() initializes king and attack bitboards for a given color
   // adding pawn attacks. To be done at the beginning of the evaluation.
