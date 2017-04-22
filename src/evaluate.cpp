@@ -220,7 +220,7 @@ namespace {
   const Value LazyThreshold = Value(1500);
 
   // InitiativePawnBonus contains an initiative bonus according to the number of pawns on the board
-  const int InitiativePawnBonus[17] = { 0, 12, 24, 36, 52, 62, 76, 88, 96, 112, 124, 139, 150, 163, 171, 178, 205 };
+  const int InitiativePawnBonus[17] = { 0, 13, 24, 36, 53, 59, 76, 90, 97, 121, 121, 139, 147, 157, 171, 183, 213 };
 
   // eval_init() initializes king and attack bitboards for a given color
   // adding pawn attacks. To be done at the beginning of the evaluation.
@@ -739,7 +739,7 @@ namespace {
     bool bothFlanks = (pos.pieces(PAWN) & QueenSide) && (pos.pieces(PAWN) & KingSide);
 
     // Compute the initiative bonus for the attacking side
-    int initiative = 8 * (asymmetry + kingDistance) + InitiativePawnBonus[pos.count<PAWN>()] + 16 * bothFlanks - 131;
+    int initiative = 8 * (asymmetry + kingDistance) + InitiativePawnBonus[pos.count<PAWN>()] + 16 * bothFlanks - 132;
 
     // Now apply the bonus: note that we find the attacking side by extracting
     // the sign of the endgame value, and that we carefully cap the bonus so
