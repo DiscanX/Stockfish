@@ -268,8 +268,6 @@ namespace {
     const Bitboard OutpostRanks = (Us == WHITE ? Rank4BB | Rank5BB | Rank6BB
                                                : Rank5BB | Rank4BB | Rank3BB);
     const Square* pl = pos.squares<Pt>(Us);
-    const Square Right = (Us == WHITE ? NORTH_EAST : SOUTH_WEST);
-    const Square Left =  (Us == WHITE ? NORTH_WEST : SOUTH_EAST);
 
     Bitboard b, bb;
     Square s;
