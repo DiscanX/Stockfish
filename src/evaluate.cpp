@@ -184,20 +184,21 @@ namespace {
   };
 
   // Assorted bonuses and penalties used by evaluation
-  const Score MinorBehindPawn     = S( 16,  0);
-  const Score BishopPawns         = S(  8, 12);
-  const Score RookOnPawn          = S(  8, 24);
-  const Score TrappedRook         = S( 92,  0);
-  const Score WeakQueen           = S( 50, 10);
-  const Score OtherCheck          = S( 10, 10);
-  const Score CloseEnemies        = S(  7,  0);
-  const Score PawnlessFlank       = S( 20, 80);
-  const Score ThreatByHangingPawn = S( 71, 61);
-  const Score ThreatBySafePawn    = S(182,175);
-  const Score ThreatByRank        = S( 16,  3);
-  const Score Hanging             = S( 48, 27);
-  const Score ThreatByPawnPush    = S( 38, 22);
-  const Score HinderPassedPawn    = S(  7,  0);
+  const Score MinorBehindPawn         = S( 16,  0);
+  const Score BishopPawns             = S(  8, 12);
+  const Score RookOnPawn              = S(  8, 24);
+  const Score TrappedRook             = S( 92,  0);
+  const Score WeakQueen               = S( 50, 10);
+  const Score OtherCheck              = S( 10, 10);
+  const Score CloseEnemies            = S(  7,  0);
+  const Score PawnlessFlank           = S( 20, 80);
+  const Score ThreatByHangingPawn     = S( 71, 61);
+  const Score ThreatBySafePawn        = S(182,175);
+  const Score ThreatByRank            = S( 16,  3);
+  const Score Hanging                 = S( 48, 27);
+  const Score ThreatByPawnPush        = S( 38, 22);
+  const Score HinderPassedPawn        = S(  7,  0);
+  const Score RookLeftOrRightDiagPawn = S( 10,  0);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -267,6 +268,8 @@ namespace {
     const Bitboard OutpostRanks = (Us == WHITE ? Rank4BB | Rank5BB | Rank6BB
                                                : Rank5BB | Rank4BB | Rank3BB);
     const Square* pl = pos.squares<Pt>(Us);
+    const Square Right = (Us == WHITE ? NORTH_EAST : SOUTH_WEST);
+    const Square Left =  (Us == WHITE ? NORTH_WEST : SOUTH_EAST);
 
     Bitboard b, bb;
     Square s;
@@ -343,6 +346,10 @@ namespace {
             // Bonus for aligning with enemy pawns on the same rank/file
             if (relative_rank(Us, s) >= RANK_5)
                 score += RookOnPawn * popcount(pos.pieces(Them, PAWN) & PseudoAttacks[ROOK][s]);
+
+            //Bonus for having a left or right diagonal pawn
+            else if((shift<Left>(b) | shift<Right>(b)) & pos.pieces(Us, PAWN))
+                score += RookLeftOrRightDiagPawn;
 
             // Bonus when on an open or semi-open file
             if (ei.pe->semiopen_file(Us, file_of(s)))
