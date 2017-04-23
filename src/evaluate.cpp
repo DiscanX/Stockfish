@@ -348,7 +348,7 @@ namespace {
                 score += RookOnPawn * popcount(pos.pieces(Them, PAWN) & PseudoAttacks[ROOK][s]);
 
             //Bonus for having a left or right diagonal pawn
-            else if((shift<Left>(b) | shift<Right>(b)) & pos.pieces(Us, PAWN))
+            else if (StepAttacksBB[make_piece(Us, PAWN)][s] & pos.pieces(Us, PAWN))
                 score += RookLeftOrRightDiagPawn;
 
             // Bonus when on an open or semi-open file
