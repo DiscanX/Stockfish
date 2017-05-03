@@ -198,6 +198,7 @@ namespace {
   const Score Hanging             = S( 48, 27);
   const Score ThreatByPawnPush    = S( 38, 22);
   const Score HinderPassedPawn    = S(  7,  0);
+  const Score NearbyBishops       = S( 15,  0);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -320,9 +321,16 @@ namespace {
                 && (pos.pieces(PAWN) & (s + pawn_push(Us))))
                 score += MinorBehindPawn;
 
-            // Penalty for pawns on the same color square as the bishop
             if (Pt == BISHOP)
+            {
+                // Penalty for pawns on the same color square as the bishop
                 score -= BishopPawns * ei.pe->pawns_on_same_color_squares(Us, s);
+
+                // Bonus for nearby bishops
+                if(pos.pieces(Us, BISHOP) & pawn_push(Us) || pos.pieces(Us, BISHOP) & (s + EAST))
+                    score += NearbyBishops;
+
+            }
 
             // An important Chess960 pattern: A cornered bishop blocked by a friendly
             // pawn diagonally in front of it is a very serious problem, especially
