@@ -198,6 +198,7 @@ namespace {
   const Score Hanging             = S( 48, 27);
   const Score ThreatByPawnPush    = S( 38, 22);
   const Score HinderPassedPawn    = S(  7,  0);
+  const Score OppositeHalfBishop  = S( 13,  6);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -267,6 +268,8 @@ namespace {
     const PieceType NextPt = (Us == WHITE ? Pt : PieceType(Pt + 1));
     const Bitboard OutpostRanks = (Us == WHITE ? Rank4BB | Rank5BB | Rank6BB
                                                : Rank5BB | Rank4BB | Rank3BB);
+    const Bitboard QueenSideWihtoutCenter = FileABB | FileBBB | FileCBB;
+    const Bitboard KingSideWihtoutCenter  = FileFBB | FileGBB | FileHBB;
     const Square* pl = pos.squares<Pt>(Us);
 
     Bitboard b, bb;
@@ -320,9 +323,16 @@ namespace {
                 && (pos.pieces(PAWN) & (s + pawn_push(Us))))
                 score += MinorBehindPawn;
 
-            // Penalty for pawns on the same color square as the bishop
             if (Pt == BISHOP)
+            {
+                // Penalty for pawns on the same color square as the bishop
                 score -= BishopPawns * ei.pe->pawns_on_same_color_squares(Us, s);
+
+                // Bonus for a bishop being on the opposite file side of the enemy king
+                if (   ((QueenSideWihtoutCenter | KingSideWihtoutCenter) & pos.square<KING>(Them))
+                    && ((file_of(pos.square<KING>(Them)) < FILE_D ? KingSideWihtoutCenter : QueenSideWihtoutCenter) & s))
+                    score += OppositeHalfBishop;
+            }
 
             // An important Chess960 pattern: A cornered bishop blocked by a friendly
             // pawn diagonally in front of it is a very serious problem, especially
