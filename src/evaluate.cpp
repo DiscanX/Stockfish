@@ -198,7 +198,7 @@ namespace {
   const Score Hanging             = S( 48, 27);
   const Score ThreatByPawnPush    = S( 38, 22);
   const Score HinderPassedPawn    = S(  7,  0);
-  const Score NearbyBishops       = S( 20,  0);
+  const Score NearbyBishop        = S( 10,  0);
 
   // Penalty for a bishop on a1/h1 (a8/h8 for black) which is trapped by
   // a friendly pawn on b2/g2 (b7/g7 for black). This can obviously only
@@ -326,9 +326,9 @@ namespace {
                 // Penalty for pawns on the same color square as the bishop
                 score -= BishopPawns * ei.pe->pawns_on_same_color_squares(Us, s);
 
-                // Bonus for nearby bishops
-                if(pos.pieces(Us, BISHOP) & pawn_push(Us) || (file_of(s) < FILE_H && (pos.pieces(Us, BISHOP) & (s + EAST))))
-                    score += NearbyBishops;
+                // Bonus for a nearby bishop
+                if (DistanceRingBB[0][s] & pos.pieces(Us, BISHOP))
+                    score += NearbyBishop;
 
             }
 
