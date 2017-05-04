@@ -327,7 +327,7 @@ namespace {
                 score -= BishopPawns * ei.pe->pawns_on_same_color_squares(Us, s);
 
                 // Bonus for nearby bishops
-                if(pos.pieces(Us, BISHOP) & pawn_push(Us) || pos.pieces(Us, BISHOP) & (s + EAST))
+                if(pos.pieces(Us, BISHOP) & pawn_push(Us) || (file_of(s) < FILE_H && (pos.pieces(Us, BISHOP) & (s + EAST))))
                     score += NearbyBishops;
 
             }
